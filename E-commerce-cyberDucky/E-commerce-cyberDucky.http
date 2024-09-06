@@ -1,0 +1,6 @@
+@E_commerce_cyberDucky_HostAddress = http://localhost:5110
+
+GET {{E_commerce_cyberDucky_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

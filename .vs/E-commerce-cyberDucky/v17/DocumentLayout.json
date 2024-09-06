@@ -1,0 +1,168 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1AA0DAAF-27A3-4AEB-9DEB-A48A3DE9083D}|Domain\\Domain.csproj|d:\\cn8\\exe201\\e-commerce-cyberducky\\domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1AA0DAAF-27A3-4AEB-9DEB-A48A3DE9083D}|Domain\\Domain.csproj|solutionrelative:domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B4A83AC-4540-4237-8819-0FD46008947F}|Application\\Application.csproj|D:\\CN8\\Exe201\\E-commerce-cyberDucky\\application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8B4A83AC-4540-4237-8819-0FD46008947F}|Application\\Application.csproj|solutionrelative:application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|D:\\CN8\\Exe201\\E-commerce-cyberDucky\\e-commerce-cyberducky\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|solutionrelative:e-commerce-cyberducky\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B4A83AC-4540-4237-8819-0FD46008947F}|Application\\Application.csproj|d:\\cn8\\exe201\\e-commerce-cyberducky\\application\\commons\\appconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B4A83AC-4540-4237-8819-0FD46008947F}|Application\\Application.csproj|solutionrelative:application\\commons\\appconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0A4168-3995-4B5C-8063-EDF55A91AAE4}|Infrastructure\\Infrastructure.csproj|d:\\cn8\\exe201\\e-commerce-cyberducky\\infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0A4168-3995-4B5C-8063-EDF55A91AAE4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|d:\\cn8\\exe201\\e-commerce-cyberducky\\e-commerce-cyberducky\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|solutionrelative:e-commerce-cyberducky\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0A4168-3995-4B5C-8063-EDF55A91AAE4}|Infrastructure\\Infrastructure.csproj|D:\\CN8\\Exe201\\E-commerce-cyberDucky\\infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0A0A4168-3995-4B5C-8063-EDF55A91AAE4}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|D:\\CN8\\Exe201\\E-commerce-cyberDucky\\e-commerce-cyberducky\\e-commerce-cyberducky.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{59ADB512-9E41-4A89-92D2-64C64C8B9C80}|E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj|solutionrelative:e-commerce-cyberducky\\e-commerce-cyberducky.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Domain",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Domain\\Domain.csproj",
+              "RelativeDocumentMoniker": "Domain\\Domain.csproj",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Domain\\Domain.csproj",
+              "RelativeToolTip": "Domain\\Domain.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-06T03:08:32.46Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppConfiguration.cs",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Application\\Commons\\AppConfiguration.cs",
+              "RelativeDocumentMoniker": "Application\\Commons\\AppConfiguration.cs",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Application\\Commons\\AppConfiguration.cs",
+              "RelativeToolTip": "Application\\Commons\\AppConfiguration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-06T03:00:17.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\appsettings.json",
+              "RelativeDocumentMoniker": "E-commerce-cyberDucky\\appsettings.json",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\appsettings.json",
+              "RelativeToolTip": "E-commerce-cyberDucky\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-06T02:54:43.666Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Infrastructure\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\AppDbContext.cs",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Infrastructure\\AppDbContext.cs",
+              "RelativeToolTip": "Infrastructure\\AppDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-06T02:27:38.179Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\Program.cs",
+              "RelativeDocumentMoniker": "E-commerce-cyberDucky\\Program.cs",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\Program.cs",
+              "RelativeToolTip": "E-commerce-cyberDucky\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-06T02:22:05.258Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Application.csproj",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Application\\Application.csproj",
+              "RelativeDocumentMoniker": "Application\\Application.csproj",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Application\\Application.csproj",
+              "RelativeToolTip": "Application\\Application.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-06T02:17:22.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Infrastructure.csproj",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Infrastructure\\Infrastructure.csproj",
+              "RelativeDocumentMoniker": "Infrastructure\\Infrastructure.csproj",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\Infrastructure\\Infrastructure.csproj",
+              "RelativeToolTip": "Infrastructure\\Infrastructure.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-06T02:16:55.405Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "E-commerce-cyberDucky.csproj",
+              "DocumentMoniker": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj",
+              "RelativeDocumentMoniker": "E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj",
+              "ToolTip": "D:\\CN8\\Exe201\\E-commerce-cyberDucky\\E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj",
+              "RelativeToolTip": "E-commerce-cyberDucky\\E-commerce-cyberDucky.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-06T02:16:28.121Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
