@@ -10,6 +10,8 @@ using Application.Service;
 //using Application.Services;
 using Infrastructure;
 using Infrastructure.Repo;
+using Microsoft.AspNetCore.Authentication;
+
 
 //using Infrastructure.Repositories;
 using System.Diagnostics;
@@ -31,14 +33,14 @@ namespace ZodiacJewelryWebApI
             services.AddSingleton<PerformanceMiddleware>();*/
             //services.AddSingleton<Stopwatch>();
             //services.AddScoped<IUserRepo, UserRepo>();
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             //services.AddSingleton<ICurrentTime, CurrentTime>();
             //services.AddScoped<IClaimsService, ClaimsService>();
 
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IProductService, ProductService>();
-            //services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
 
 
             //services.AddScoped<IZodiacProductRepo, ZodiacProductRepo>();

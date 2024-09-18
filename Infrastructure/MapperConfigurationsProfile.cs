@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels;
+using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -14,7 +15,7 @@ namespace Infrastructure
         public MapperConfigurationsProfile()
         {
 
-            //CreateMap<User, RegisterDTO>().ReverseMap();
+            CreateMap<User, RegisterDTO>().ReverseMap();
             //CreateMap<User, LoginUserDTO>().ReverseMap();
             //CreateMap<ResetPassDTO, User>()
                  //.ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
@@ -40,10 +41,6 @@ namespace Infrastructure
             //CreateMap<Material, MaterialResDTO>().ReverseMap();
             //CreateMap<Material, MaterialReqDTO>().ReverseMap();
             //CreateMap<OrderDetails, OrderDetailsResDTO>().ReverseMap();
-
-
-
-
         }
     }
 }

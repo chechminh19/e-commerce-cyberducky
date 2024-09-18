@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using E_commerce_cyberDucky.Middlewares;
 using System.Reflection;
 using System.Text;
 using ZodiacJewelryWebApI;
@@ -18,11 +19,10 @@ var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
 builder.Services.Configure<Cloud>(configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton(myConfig);
 builder.Services.AddWebAPIService();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddSingleton(myConfig);
-
-//builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 
 builder.Services.AddCors(options =>
 {
@@ -106,6 +106,7 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ConfirmationTokenMiddleware>();
 
 app.MapControllers();
 
