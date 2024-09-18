@@ -28,14 +28,17 @@ namespace Application.ViewModels
         [NonNegative(ErrorMessage = "Quantity must be a non-negative integer")]
         [ValidateType(typeof(int), ErrorMessage = "Quantity must be a valid number")]
         public int Quantity { get; set; }
-
-        [Required(ErrorMessage = "Category ID is required")]
-        [ValidateType(typeof(int), ErrorMessage = "Category ID must be an integer")]
-        public int CategoryId { get; set; }
-
         [Required(ErrorMessage = "Material ID is required")]
         [ValidateType(typeof(int), ErrorMessage = "Material ID must be an integer")]
         public int MaterialId { get; set; }
+
+        [Required(ErrorMessage = "Color ID is required")]
+        [ValidateType(typeof(int), ErrorMessage = "Color ID must be an integer")]
+        public int ColorId { get; set; }
+        [Required(ErrorMessage = "TypeProduct ID is required")]
+        [ValidateType(typeof(int), ErrorMessage = "TypeProduct ID must be an integer")]
+        public int TypeProductId { get; set; }
+
         public List<string?>? ImageUrls { get; set; }        
     }
     public class NonNegativeAttribute : ValidationAttribute

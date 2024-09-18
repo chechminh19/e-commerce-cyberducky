@@ -31,6 +31,19 @@ namespace E_commerce_cyberDucky.Controllers
             return Ok(result);
         }
         [AllowAnonymous]
+        [HttpGet("type")]
+        public async Task<IActionResult> GetAllProductType([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
+          [FromQuery] string search = "", [FromQuery] string sort = "", [FromQuery]string idtype = "")
+        {
+            var result = await _productService.GetAllProductType(page, pageSize, search, sort, idtype);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        [AllowAnonymous]
         //[Authorize(Roles = "Staff,Admin")]      
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(CreateProductDTO product)

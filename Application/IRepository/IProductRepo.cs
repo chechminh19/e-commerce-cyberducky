@@ -12,6 +12,7 @@ namespace Application.IRepository
     {
         Task<Product> GetProductById(int id);
         Task<IEnumerable<Product>> GetAllProduct();
+        Task<IEnumerable<Product>> GetTypeProduct(string idType);
         Task AddProduct(Product product);
         Task UpdateProduct(Product product);
         Task DeleteProduct(int id);

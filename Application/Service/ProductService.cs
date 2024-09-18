@@ -95,6 +95,47 @@ namespace Application.Service
 
             return response;
         }
+
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductType(int page, int pageSize, 
+            string search, string sort, string idType)
+        {
+            var response = new ServiceResponse<PaginationModel<ProductDTO>>();
+
+            try
+            {
+                var products = await _productRepo.GetTypeProduct(idType);
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = products.Where(p => p.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                products = sort.ToLower() switch
+                {  // Sort by price in ascending order when "price" is specified
+                    "price" => products.OrderBy(p => p.Price),
+                    // Sort by name, material, color as required
+                    "name" => products.OrderBy(p => p.NameProduct),
+                    "material" => products.OrderBy(p => p.MaterialId),
+                    "color" => products.OrderBy(p => p.ColorId),
+                    // Default to sorting by Id in descending order (newest first) when no sort or other sort types
+                    _ => products.OrderByDescending(p => p.Id)
+                };
+                var productDTOs = MapToDTO(products); // Map products to ProductDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
+
+                response.Data = paginationModel;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"Failed to retrieve products: {ex.Message}";
+            }
+
+            return response;
+        }
+
         private ProductDTO MapToDTO(Product product)
         {
             var productDTO = _mapper.Map<ProductDTO>(product);

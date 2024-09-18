@@ -68,6 +68,14 @@ namespace Infrastructure.Repo
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<Product>> GetTypeProduct(string idType)
+        {
+            return await _dbContext.Products.Where(a => a.TypeProductId.ToString() == idType)
+              .Include(p => p.ProductImages)
+              .AsNoTracking()
+              .ToListAsync();
+        }
+
         public Task UpdateProduct(Product product)
         {
             throw new NotImplementedException();
