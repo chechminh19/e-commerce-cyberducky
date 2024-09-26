@@ -30,5 +30,29 @@ namespace E_commerce_cyberDucky.Controllers
                 return Ok(result);
             }
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
+        {
+            var result = await _authenticationService.LoginAsync(loginObject);
+
+            if (!result.Success)
+            {
+                return StatusCode(401, result);
+            }
+            else
+            {
+                return Ok(
+                    new
+                    {
+                        success = result.Success,
+                        message = result.Message,
+                        token = result.DataToken,
+                        role = result.Role,
+                        hint = result.HintId,
+                    }
+                );
+            }
+        }
+
     }
 }

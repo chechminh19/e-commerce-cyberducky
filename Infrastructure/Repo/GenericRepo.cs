@@ -17,9 +17,10 @@ namespace Infrastructure.Repo
             this._appDbContext = appDbContext;
             _dbSet = appDbContext.Set<T>(); 
         }
-        public Task AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-            throw new NotImplementedException();
+            _ = await _dbSet.AddAsync(entity);
+            _ = await _appDbContext.SaveChangesAsync();
         }
 
         public Task<List<T>> GetAllAsync()

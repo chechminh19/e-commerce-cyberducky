@@ -10,6 +10,8 @@ namespace Application.IService
 {
     public interface IAuthenService
     {
-        public Task<ServiceResponse<RegisterDTO>> RegisterAsync(RegisterDTO userObject);
+        public Task<ServiceResponse<RegisterDTO>> RegisterAsync(RegisterDTO userObject); 
+        public Task<TokenResponse<string>> LoginAsync(LoginUserDTO userObject);
+
     }
 }

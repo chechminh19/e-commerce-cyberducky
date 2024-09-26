@@ -17,25 +17,14 @@ namespace Infrastructure.Repo
             _dbContext = context;
         }
 
-        public Task AddAsync(User entity)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<bool> CheckEmailAddressExisted(string sEmail)
         {
             return await _dbContext.Users.AnyAsync(u => u.Email == sEmail);
         }
 
-        public Task<List<User>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User?> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<User> GetUserByConfirmationToken(string sToken)
         {
@@ -44,19 +33,16 @@ namespace Infrastructure.Repo
            );
         }
 
-        public Task Remove(User entity)
+        public async Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
+            if (user is null)
+            {
+                throw new Exception("Email & password is not correct");
+            }
 
-        public Task Update(User entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateE(User entity)
-        {
-            throw new NotImplementedException();
+            return user;
         }
     }
 }

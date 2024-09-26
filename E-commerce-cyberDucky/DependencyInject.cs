@@ -32,9 +32,9 @@ namespace ZodiacJewelryWebApI
             /*services.AddSingleton<GlobalExceptionMiddleware>();
             services.AddSingleton<PerformanceMiddleware>();*/
             //services.AddSingleton<Stopwatch>();
-            //services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenService, AuthenService>();
             //services.AddSingleton<ICurrentTime, CurrentTime>();
             //services.AddScoped<IClaimsService, ClaimsService>();
 
