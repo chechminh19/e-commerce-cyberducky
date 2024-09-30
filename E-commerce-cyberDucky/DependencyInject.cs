@@ -39,7 +39,9 @@ namespace ZodiacJewelryWebApI
             //services.AddScoped<IClaimsService, ClaimsService>();
 
             services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<IOrderRepo, OrderRepo>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddHttpContextAccessor();
 
 

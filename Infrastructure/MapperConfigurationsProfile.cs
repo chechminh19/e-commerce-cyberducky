@@ -19,7 +19,7 @@ namespace Infrastructure
             CreateMap<User, LoginUserDTO>().ReverseMap();          
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
-           
+            CreateMap<Product, CreateOrderDTO>().ReverseMap();
         }
     }
 }
