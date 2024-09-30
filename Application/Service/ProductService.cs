@@ -35,17 +35,7 @@ namespace Application.Service
                 await _productRepo.AddProduct(newProduct);
                 response.Data = newProduct.Id;
                 response.Success = true;
-                response.Message = "Product created successfully";
-
-                // Create the ZodiacProduct entity
-                //var newZodiacProduct = new ZodiacProduct
-                //{
-                //    ProductId = newProduct.Id,
-                //    ZodiacId = zodiacId
-                //};
-
-                // Add the ZodiacProduct entity to the repository
-                //await _zodiacProductRepo.AddZodiacProduct(newZodiacProduct);
+                response.Message = "Product created successfully";           
             }
             catch (Exception ex)
             {
@@ -131,6 +121,34 @@ namespace Application.Service
             {
                 response.Success = false;
                 response.Message = $"Failed to retrieve products: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id)
+        {
+            var response = new ServiceResponse<ProductDTO>();
+
+            try
+            {
+                var product = await _productRepo.GetProductById(id);
+                if (product == null)
+                {
+                    response.Success = false;
+                    response.Message = "Product not found";
+                }
+                else
+                {
+                    var productDTO = MapToDTO(product);
+                    response.Data = productDTO;
+                    response.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"Failed to retrieve product: {ex.Message}";
             }
 
             return response;

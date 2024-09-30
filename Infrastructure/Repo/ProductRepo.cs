@@ -48,9 +48,22 @@ namespace Infrastructure.Repo
                .ToListAsync();
         }
 
-        public Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var product = await _dbContext.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.Color)
+                 .Include(p => p.Material)
+                 .Include(p => p.TypeProduct)
+                .AsNoTracking() // option for read-only data
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"Product with id {id} not found.");
+            }
+
+            return product;
         }
 
         public Task<Product> GetProductByIdToOrder(int id)

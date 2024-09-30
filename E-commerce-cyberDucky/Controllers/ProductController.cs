@@ -27,6 +27,17 @@ namespace E_commerce_cyberDucky.Controllers
             {
                 return BadRequest(result);
             }
+            return Ok(result);
+        }
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductByIdAsync(int id)
+        {
+            var result = await _productService.GetProductByIdAsync(id);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
 
             return Ok(result);
         }
