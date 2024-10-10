@@ -73,7 +73,7 @@ namespace Infrastructure.Repo
 
         public double GetProductPriceById(int productId)
         {
-            throw new NotImplementedException();
+            return _dbContext.Products.FirstOrDefault(p => p.Id == productId)?.Price ?? 0;
         }
 
         public Task<int> GetTotalProductsAsync()

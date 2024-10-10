@@ -39,6 +39,12 @@ namespace Infrastructure.Repo
             return order;
         }
 
+        public async Task Delete(Order order)
+        {
+            _dbContext.Orders.Remove(order);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
         {
             return _dbContext.Orders
@@ -56,6 +62,13 @@ namespace Infrastructure.Repo
                 .Include(od => od.Product)
                 .ThenInclude(p => p.Color)
                 .ToList();
+        }
+
+        public async Task<Order?> GetOrderWithDetailsAsync(int orderId)
+        {
+            return await _dbContext.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
         public async Task UpdateOrderDetail(OrderDetails orderDetail)

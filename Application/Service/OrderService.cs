@@ -147,5 +147,72 @@ namespace Application.Service
 
             return response;
         }
+
+        public async Task<ServiceResponse<bool>> RemoveProductFromCart(int orderId, int productId)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
+            if (order == null)
+            {
+
+                response.Success = false;
+                response.Message = "Order not found.";
+                return response;
+            }
+
+            var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
+            if (orderDetail == null)
+            {
+
+                response.Success = false;
+                response.Message = "Product not found in order.";
+                return response;
+            }
+
+            order.OrderDetails.Remove(orderDetail);
+            if (!order.OrderDetails.Any())
+            {
+                await _orderRepo.Delete(order);
+                response.Message = "Order and product removed successfully.";
+            }
+            else
+            {
+                await _orderRepo.Update(order);
+                response.Message = "Product removed successfully.";
+            }
+
+            response.Data = true;
+            response.Message = "Product removed successfully.";
+            return response;
+        }
+
+        public async Task<ServiceResponse<bool>> UpdateOrderQuantity(int orderId, int productId, int quantity)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
+            if (order == null)
+            {
+                response.Success = false;
+                response.Message = "Order not found.";
+                return response;
+            }
+
+            var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
+            if (orderDetail == null)
+            {
+                response.Success = false;
+                response.Message = "Product not found in order.";
+                return response;
+            }
+
+            orderDetail.QuantityProduct = quantity;
+            await _orderRepo.Update(order);
+
+            response.Data = true;
+            response.Message = "Quantity updated successfully.";
+            return response;
+        }
     }
 }

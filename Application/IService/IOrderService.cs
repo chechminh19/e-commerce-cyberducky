@@ -12,6 +12,7 @@ namespace Application.IService
     {
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId);
         Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId);
-
+        Task<ServiceResponse<bool>> UpdateOrderQuantity(int orderId, int productId, int quantity);
+        Task<ServiceResponse<bool>> RemoveProductFromCart(int orderId, int productId);
     }
 }
