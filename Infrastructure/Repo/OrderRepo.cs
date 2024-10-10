@@ -18,6 +18,27 @@ namespace Infrastructure.Repo
         {
             _dbContext = context;
         }
+
+        public async Task AddOrder(Order order)
+        {
+
+            _dbContext.Orders.Add(order);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddOrderDetail(OrderDetails orderDetail)
+        {
+            _dbContext.OrderDetail.Add(orderDetail);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Order> CheckUserWithOrder(int userId)
+        {
+            var order = await _dbContext.Orders.Include(p => p.OrderDetails)
+                 .FirstOrDefaultAsync(p => p.UserId == userId && p.Status == (byte)OrderCart.Process);
+            return order;
+        }
+
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
         {
             return _dbContext.Orders
@@ -35,6 +56,12 @@ namespace Infrastructure.Repo
                 .Include(od => od.Product)
                 .ThenInclude(p => p.Color)
                 .ToList();
+        }
+
+        public async Task UpdateOrderDetail(OrderDetails orderDetail)
+        {
+            _dbContext.OrderDetail.Update(orderDetail);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

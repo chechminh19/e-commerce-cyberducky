@@ -3,6 +3,7 @@ using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels;
 using AutoMapper;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -23,6 +24,72 @@ namespace Application.Service
             _orderRepo = orderRepo ?? throw new ArgumentNullException(nameof(orderRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _productRepo = product;
+        }
+
+        public async Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId)
+        {
+            var response = new ServiceResponse<string>();
+            try
+            {
+                var checkUserOrder = await _orderRepo.CheckUserWithOrder(userId);
+                if (checkUserOrder == null || checkUserOrder.Status == 2)
+                {
+                    Order newOrder = new Order
+                    {
+                        UserId = userId,
+                        Status = 1,
+                        OrderDetails = new List<OrderDetails>()
+                    };
+                    OrderDetails newOrderDetail = new OrderDetails
+                    {
+                        ProductId = productId,
+                        QuantityProduct = 1,
+                        Price = _productRepo.GetProductPriceById(productId),
+                    };
+                    newOrder.OrderDetails.Add(newOrderDetail);
+                    await _orderRepo.AddOrder(newOrder);
+                    response.Success = true;
+                    response.Message = "Add Product successfully when have no order already for user";
+                }
+                else
+                {
+                    var existingOrder = checkUserOrder.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
+                    if (existingOrder != null)
+                    {
+                        existingOrder.QuantityProduct += 1;
+                        await _orderRepo.UpdateOrderDetail(existingOrder);
+                        response.Success = true;
+                        response.Message = "add duplicate success";
+                    }
+                    else
+                    {
+                        OrderDetails existingOrderDetail = new OrderDetails
+                        {
+                            OrderId = checkUserOrder.Id,
+                            ProductId = productId,
+                            QuantityProduct = 1,
+                            Price = _productRepo.GetProductPriceById(productId),
+                        };
+                        await _orderRepo.AddOrderDetail(existingOrderDetail);
+                        response.Success = true;
+                        response.Message = "Add product successfully when already order for user";
+                    }
+                }
+            }
+            catch (DbException e)
+            {
+                response.Success = false;
+                response.Message = "Database error occurred.";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                response.Success = false;
+                response.Message = "Error";
+                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+            }
+
+            return response;
         }
 
         public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId)

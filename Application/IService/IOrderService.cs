@@ -11,5 +11,7 @@ namespace Application.IService
     public interface IOrderService
     {
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId);
+        Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId);
+
     }
 }
