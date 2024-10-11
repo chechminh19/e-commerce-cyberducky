@@ -16,7 +16,6 @@ using Net.payOS;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var configuration = builder.Configuration;
 var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
@@ -61,6 +60,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = configuration["JWTSection:Issuer"],
             ValidAudience = configuration["JWTSection:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSection:SecretKey"]))          
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var exception = context.Exception;
+                Console.WriteLine("Token validation failed: " + exception.Message);
+                return Task.CompletedTask;
+            }
         };
     });
 builder.Services.AddControllers();
@@ -114,7 +122,6 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
-
 app.MapControllers();
 
 app.Run();

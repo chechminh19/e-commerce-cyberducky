@@ -35,9 +35,23 @@ namespace Infrastructure.Repo
             }
         }
 
-        public Task DeleteProduct(int id)
+        public async Task DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var product = await _dbContext.Products.FindAsync(id);
+                if (product == null)
+                {
+                    throw new KeyNotFoundException($"Product with id {id} not found.");
+                }
+
+                _dbContext.Products.Remove(product);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting the product.", ex);
+            }
         }
 
         public async Task<IEnumerable<Product>> GetAllProduct()

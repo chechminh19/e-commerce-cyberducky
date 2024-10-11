@@ -223,5 +223,33 @@ namespace Application.Service
         {
             return _mapper.Map<Product>(CreateProductDTO);
         }
+
+        public async Task<ServiceResponse<string>> DeleteProductAsync(int id)
+        {
+            var response = new ServiceResponse<string>();
+
+            try
+            {
+                var existingProduct = await _productRepo.GetProductById(id);
+                if (existingProduct == null)
+                {
+                    response.Success = false;
+                    response.Message = "Product not found";
+                }
+                else
+                {
+                    await _productRepo.DeleteProduct(id);
+                    response.Data = "Product deleted successfully";
+                    response.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"Failed to delete product: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

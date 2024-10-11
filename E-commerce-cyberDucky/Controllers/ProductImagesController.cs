@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Application.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Cors;
 
 namespace E_commerce_cyberDucky.Controllers
 {
+    [EnableCors("Allow")]
+    [Route("api/images")]
+    [ApiController]
     public class ProductImagesController : BaseController
     {
         private readonly Cloudinary _cloudinary;
@@ -29,7 +33,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// upload image product when create for admin
         /// </summary>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
         {
@@ -79,7 +83,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <param name="imageId"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{productId}/images/{imageId}")]
         public async Task<IActionResult> UpdateProductImage(int productId, int imageId, IFormFile file)
         {

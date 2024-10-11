@@ -96,7 +96,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// add product to order
         /// </summary>      
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpPost("{userid}/{productid}")]
         public async Task<IActionResult> AddProductToOrder(int userid, int productid)
         {
@@ -108,7 +108,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// get all product of customer
         /// </summary>      
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpGet("customer/{userid}")]
         public async Task<IActionResult> GetAllOrderCartCustomer(int userid)
         {
@@ -120,7 +120,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// update quantity product cart
         /// </summary>      
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpPut("update-quantity")]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
         {
@@ -132,7 +132,7 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// remove quantity product cart
         /// </summary>      
-        [Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpDelete("remove-product/{orderId}/{productId}")]
         public async Task<IActionResult> RemoveProduct(int orderId, int productId)
         {

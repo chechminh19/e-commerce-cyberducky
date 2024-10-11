@@ -17,7 +17,7 @@ namespace E_commerce_cyberDucky.Controllers
             _imageService = imageService;
         }
        
-        [Authorize(Roles = "Staff,Admin,Customer")]
+        //[Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> AllImageInfors([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
@@ -28,7 +28,7 @@ namespace E_commerce_cyberDucky.Controllers
             }
             return Ok(result);
         }
-        [Authorize(Roles = "Staff,Admin,Customer")]
+        //[Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImageInforById(int id)
         {

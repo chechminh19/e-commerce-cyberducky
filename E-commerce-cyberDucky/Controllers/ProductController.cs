@@ -9,7 +9,6 @@ namespace E_commerce_cyberDucky.Controllers
     [EnableCors("Allow")]
     [Route("api/products")]
     [ApiController]
-    [Authorize(Roles = "Staff,Admin,Customer")]
     public class ProductController :BaseController
     {
         private readonly IProductService _productService;
@@ -66,9 +65,7 @@ namespace E_commerce_cyberDucky.Controllers
         }/// <summary>
         /// create product for admin
         /// </summary>
-
-        [AllowAnonymous]
-        [Authorize(Roles = "Admin")]      
+        //[Authorize(Roles = "Admin")]      
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(CreateProductDTO product)
         {
@@ -82,9 +79,9 @@ namespace E_commerce_cyberDucky.Controllers
         }
         /// <summary>
         /// update product for admin
-        /// </summary>       
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        /// </summary>      
+        //[Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]      
         public async Task<IActionResult> UpdateProductAsync(int id, CreateProductDTO product)
         {
             var result = await _productService.UpdateProductAsync(product);
@@ -95,7 +92,21 @@ namespace E_commerce_cyberDucky.Controllers
 
             return Ok(result);
         }
+        /// <summary>
+        /// delete product for admin
+        /// </summary>    
+        //[Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProductAsync(int id)
+        {
+            var result = await _productService.DeleteProductAsync(id);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
 
+            return Ok(result);
+        }
 
     }
 }
