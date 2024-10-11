@@ -17,6 +17,9 @@ namespace E_commerce_cyberDucky.Controllers
         {
             _authenticationService = authen;
         }
+        /// <summary>
+        /// register for customer
+        /// </summary>      
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO registerObject)
@@ -31,7 +34,9 @@ namespace E_commerce_cyberDucky.Controllers
             {
                 return Ok(result);
             }
-        }
+        }/// <summary>
+         /// login
+         /// </summary>      
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)

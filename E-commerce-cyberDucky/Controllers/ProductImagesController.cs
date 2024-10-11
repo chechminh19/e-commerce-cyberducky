@@ -29,9 +29,6 @@ namespace E_commerce_cyberDucky.Controllers
         /// <summary>
         /// upload image product when create for admin
         /// </summary>
-        /// <param name="productId"></param>
-        /// <param name="files"></param>
-        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
