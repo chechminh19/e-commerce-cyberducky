@@ -26,9 +26,13 @@ namespace E_commerce_cyberDucky.Controllers
             _cloudinary = new Cloudinary(cloudinaryAccount);
             _context = context;
         }
-
-        //[Authorize(Roles = "Staff,Admin")]
-        [AllowAnonymous]
+        /// <summary>
+        /// upload image product when create for admin
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
         {
@@ -71,8 +75,14 @@ namespace E_commerce_cyberDucky.Controllers
 
             return Ok(new { imageUrls = uploadedImageUrls });
         }
-
-        [Authorize(Roles = "Staff,Admin")]
+        /// <summary>
+        /// update images product for admin
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="imageId"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{productId}/images/{imageId}")]
         public async Task<IActionResult> UpdateProductImage(int productId, int imageId, IFormFile file)
         {

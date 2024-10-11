@@ -1,6 +1,7 @@
 ﻿using Application.IService;
 using Application.ViewModels.UserDTO;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace E_commerce_cyberDucky.Controllers
         {
             _authenticationService = authen;
         }
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO registerObject)
         {
@@ -30,6 +32,7 @@ namespace E_commerce_cyberDucky.Controllers
                 return Ok(result);
             }
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
         {
@@ -53,6 +56,8 @@ namespace E_commerce_cyberDucky.Controllers
                 );
             }
         }
+       
+
 
     }
 }

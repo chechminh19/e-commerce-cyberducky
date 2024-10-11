@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,7 +83,6 @@ namespace Application.Service
                 response.Success = false;
                 response.Message = $"Failed to retrieve products: {ex.Message}";
             }
-
             return response;
         }
 
@@ -149,6 +149,61 @@ namespace Application.Service
             {
                 response.Success = false;
                 response.Message = $"Failed to retrieve product: {ex.Message}";
+            }
+
+            return response;
+        }
+        private void MapCreateProductDTOToEntity(CreateProductDTO productDTO, Product existingProduct)
+        {
+            existingProduct.NameProduct = productDTO.NameProduct;
+            existingProduct.DescriptionProduct = productDTO.DescriptionProduct;
+            existingProduct.Price = productDTO.Price;
+            existingProduct.Quantity = productDTO.Quantity;
+            existingProduct.TypeProductId = productDTO.TypeProductId;
+            existingProduct.MaterialId = productDTO.MaterialId;
+            existingProduct.ColorId = productDTO.ColorId;
+        }
+        public async Task<ServiceResponse<string>> UpdateProductAsync(CreateProductDTO cproduct)
+        {
+            var response = new ServiceResponse<string>();
+
+            try
+            {
+                // Validate the product DTO
+                var validationContext = new ValidationContext(cproduct);
+                var validationResults = new List<ValidationResult>();
+                if (!Validator.TryValidateObject(cproduct, validationContext, validationResults, true))
+                {
+                    var errorMessages = validationResults.Select(r => r.ErrorMessage);
+                    response.Success = false;
+                    response.Message = string.Join("; ", errorMessages);
+                    return response;
+                }
+
+                // Retrieve the existing product from the repository
+                var existingProduct = await _productRepo.GetProductById(cproduct.Id);
+                if (existingProduct == null)
+                {
+                    response.Success = false;
+                    response.Message = "Product not found";
+                    return response;
+                }
+
+                // Map updated values from DTO to the existing entity
+                MapCreateProductDTOToEntity(cproduct, existingProduct);
+
+                // Update the product in the repository
+                await _productRepo.UpdateProduct(existingProduct);              
+                response.Data = "Product updated successfully";
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+
+
+                response.Success = false;
+                response.Message = $"Failed to update product: {ex.Message}";
             }
 
             return response;

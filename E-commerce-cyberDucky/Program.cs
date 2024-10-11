@@ -9,6 +9,9 @@ using E_commerce_cyberDucky.Middlewares;
 using System.Reflection;
 using System.Text;
 using ZodiacJewelryWebApI;
+using Net.payOS;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +22,11 @@ var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
 builder.Services.Configure<Cloud>(configuration.GetSection("Cloudinary"));
+PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
 builder.Services.AddSingleton(myConfig);
+builder.Services.AddSingleton(payOS);
 builder.Services.AddWebAPIService();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddSingleton(myConfig);
@@ -78,7 +85,22 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-   
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme{
+                Reference = new OpenApiReference{
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
