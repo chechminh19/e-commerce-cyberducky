@@ -38,7 +38,7 @@ namespace E_commerce_cyberDucky.Controllers
                 if (data.code == "00")
                 {                    
                     var result = await _orderService.PaymentOrder(order.Id);
-                    if(result == null)
+                    if(result.Success == false)
                     {
                         return Ok(new Response(-1, "fail", null));
                     }
