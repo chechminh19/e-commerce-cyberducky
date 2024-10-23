@@ -18,6 +18,7 @@ namespace Domain.Entities
         public virtual User? User { get; set; }
         public DateTime? PaymentDate { get; set; }
         public byte Status { get; set; }
+        public int? CodePay { get; set; }
 
         public ICollection<OrderDetails> OrderDetails { get; set; }
     }

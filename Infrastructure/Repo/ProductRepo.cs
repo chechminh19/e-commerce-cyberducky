@@ -108,9 +108,18 @@ namespace Infrastructure.Repo
             throw new NotImplementedException();
         }
 
-        public Task UpdateProductQuantities(IEnumerable<ProductUpdate> products)
+        public async Task UpdateProductQuantities(IEnumerable<ProductUpdate> products)
         {
-            throw new NotImplementedException();
+            foreach (var productInfo in products)
+            {
+                var product = await _dbContext.Products.FindAsync(productInfo.ProductId);
+                if (product != null)
+                {
+                    product.Quantity += productInfo.QuantityChange;
+                    _dbContext.Products.Update(product);
+                }
+            }
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

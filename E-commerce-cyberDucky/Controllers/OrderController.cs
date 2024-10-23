@@ -1,17 +1,20 @@
 ﻿using Application.IService;
 using Application.ViewModels;
 using Azure;
+using Domain.Entities;
 using E_commerce_cyberDucky.Type;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
 using Net.payOS.Types;
+using System.Linq;
 using Response = E_commerce_cyberDucky.Type.Response;
 
 namespace E_commerce_cyberDucky.Controllers
 {
-    [EnableCors("Allow")]
+    [EnableCors("AllowAll")]
     [Route("api/orders")]
     [ApiController]
     public class OrderController : BaseController
@@ -27,16 +30,35 @@ namespace E_commerce_cyberDucky.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
         {
+            var total = 0;
             try
             {
+                var result = await _orderService.GetAllOrderCustomerCart(body.userId);
+                if (!result.Success || result.Data == null)
+                {
+                    return Ok(new Response(-1, "No order found", null));
+                }
+                var productList = result.Data.Product;
+                double totalPrice = result.Data.PriceTotal;
+                int orderId = productList.FirstOrDefault()?.OrderId ?? 0; // Lấy orderId từ sản phẩm đầu tiên
                 int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
-                ItemData item = new ItemData(body.productName, 1, body.price);
-                List<ItemData> items = new List<ItemData>();
-                items.Add(item);
-                PaymentData paymentData = new PaymentData(orderCode, body.price, body.description, items, body.cancelUrl, body.returnUrl);
+                var des = productList.FirstOrDefault().DescriptionProduct;
+                bool isUpdated = await _orderService.UpdateOrderCodePay(orderId, orderCode);
+                if (!isUpdated)
+                {
+                    return Ok(new Response(-1, "Failed to update CodePay", null));
+                }
+
+                // Step 4: Prepare the list of items for the payment link
+                List<ItemData> items = productList.Select(product => new ItemData(
+                    product.NameProduct,
+                    product.Quantity,
+                    (int)product.Price
+                )).ToList();
+                total = (int)totalPrice;
+                PaymentData paymentData = new PaymentData(orderCode, total, des, items, body.cancelUrl, body.successUrl);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
-
                 return Ok(new Response(0, "success", createPayment));
             }
             catch (System.Exception exception)

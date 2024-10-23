@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace E_commerce_cyberDucky.Controllers
 {
-    [EnableCors("Allow")]
+    [EnableCors("AllowAll")]
     [Route("api/images")]
     [ApiController]
     public class ProductImagesController : BaseController

@@ -1,6 +1,7 @@
 ﻿using Application.IRepository;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Utils;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Entities;
@@ -148,6 +149,87 @@ namespace Application.Service
             return response;
         }
 
+        public async Task<ServiceResponse<string>> PaymentOrder(int orderId)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+            try
+            {
+                Order order = await _orderRepo.GetOrderByIdProcessingToPay(orderId, Enums.OrderCart.Process);
+
+                if (order == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "not found orderId";
+                }
+                else
+                {
+                    order.Status = (byte)Enums.OrderCart.Completed;                  
+                    DateTime utcNow = DateTime.UtcNow;
+                    TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                    DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
+                    order.PaymentDate = gmtPlus7Now;
+
+                    var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
+                    if (!updateResponse.Success)
+                    {
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = updateResponse.Message;
+                        serviceResponse.ErrorMessages = updateResponse.ErrorMessages;
+                        return serviceResponse;
+                    }
+                    await _orderRepo.SaveChangesAsync();
+                    //await transaction.CommitAsync();
+                    var orderEmailDto = new ShowOrderSuccessEmailDTO
+                    {
+                        OrderId = order.Id,
+                        UserName = order.User.FullName,
+                        PaymentDate = order.PaymentDate.Value,
+                        OrderItems = order.OrderDetails.Select(od => new OrderItemEmailDto
+                        {
+                            ProductName = od.Product.NameProduct,
+                            Quantity = od.QuantityProduct,
+                            Price = od.Price
+                        }).ToList()
+                    };
+                    // Send payment success email
+                    var userEmail = order.User?.Email; // Assuming the Order object has a User property with an Email
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
+
+                        if (emailSent)
+                        {
+                            serviceResponse.Success = true;
+                            serviceResponse.Message = "Payment successful and email sent.";
+                        }
+                        else
+                        {
+                            serviceResponse.Success = true;
+                            serviceResponse.Message = "Payment successful but email sending failed.";
+                        }
+                    }
+                    else
+                    {
+                        serviceResponse.Success = true;
+                        serviceResponse.Message = "Payment successful but no user email found.";
+                    }
+                }
+            }
+            catch (DbException e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Database error occurred.";
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Error error occurred.";
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<bool>> RemoveProductFromCart(int orderId, int productId)
         {
             var response = new ServiceResponse<bool>();
@@ -187,6 +269,18 @@ namespace Application.Service
             return response;
         }
 
+        public async Task<bool> UpdateOrderCodePay(int orderId, int codePay)
+        {
+            var order = await _orderRepo.GetOrderByIdProcessingToPay(orderId, Enums.OrderCart.Process);  // Lấy order từ DB
+            if (order != null)
+            {
+                order.CodePay = codePay;  // Cập nhật mã CodePay
+                await _orderRepo.UpdateOrderCodePay(order);  // Lưu cập nhật vào DB
+                return true;
+            }
+            return false;
+        }
+
         public async Task<ServiceResponse<bool>> UpdateOrderQuantity(int orderId, int productId, int quantity)
         {
             var response = new ServiceResponse<bool>();
@@ -214,5 +308,47 @@ namespace Application.Service
             response.Message = "Quantity updated successfully.";
             return response;
         }
-    }
+
+        public async Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+
+            try
+            {
+                var orderDetails = await _orderRepo.GetOrderDetailsByOrderId(order.Id);
+                if (orderDetails == null || !orderDetails.Any())
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Order not found or no items in cart.";
+                    return serviceResponse;
+                }
+
+                var productUpdates = orderDetails
+                 .GroupBy(detail => detail.ProductId)
+                 .Select(group => new ProductUpdate
+                 {
+                     ProductId = group.Key,
+                     QuantityChange = -group.Sum(detail => detail.QuantityProduct)
+                 })
+                 .ToList();
+
+                await _productRepo.UpdateProductQuantities(productUpdates);
+
+                serviceResponse.Success = true;
+                serviceResponse.Message = "Product quantities updated successfully.";
+            }
+            catch (DbException e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.ErrorMessages = new List<string> { ex.Message, ex.StackTrace };
+            }
+
+            return serviceResponse;
+        }
+    }    
 }

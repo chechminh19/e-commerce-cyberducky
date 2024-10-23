@@ -1,4 +1,4 @@
-using Application.Commons;
+﻿using Application.Commons;
 using Application.ViewModels;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,16 +16,21 @@ using Net.payOS;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
 var configuration = builder.Configuration;
+var payOs = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment client"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment api"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment sum"));
+builder.Services.AddScoped<PayOS>(_ => payOs);
+
 var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection")));
+// Use connection string directly
+
+
 builder.Services.Configure<Cloud>(configuration.GetSection("Cloudinary"));
-PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
-                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
-                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
 builder.Services.AddSingleton(myConfig);
-builder.Services.AddSingleton(payOS);
 builder.Services.AddWebAPIService();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddSingleton(myConfig);
