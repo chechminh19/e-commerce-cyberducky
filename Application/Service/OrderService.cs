@@ -170,7 +170,7 @@ namespace Application.Service
                     order.PaymentDate = gmtPlus7Now;
 
                     var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
-                    if (!updateResponse.Success)
+                    if (updateResponse.Success == false)
                     {
                         serviceResponse.Success = false;
                         serviceResponse.Message = updateResponse.Message;
