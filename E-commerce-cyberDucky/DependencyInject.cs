@@ -28,51 +28,19 @@ namespace ZodiacJewelryWebApI
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddHealthChecks();
-            //services.AddCors();
-            /*services.AddSingleton<GlobalExceptionMiddleware>();
-            services.AddSingleton<PerformanceMiddleware>();*/
-            //services.AddSingleton<Stopwatch>();
-            services.AddScoped<IUserRepo, UserRepo>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthenService, AuthenService>();
-            //services.AddSingleton<ICurrentTime, CurrentTime>();
-            //services.AddScoped<IClaimsService, ClaimsService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IImageService, ImageService>();
 
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IOrderRepo, OrderRepo>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddHttpContextAccessor();
-
-
-            //services.AddScoped<IZodiacProductRepo, ZodiacProductRepo>();
-
-            //services.AddScoped<IZodiacProductService, ZodiacProductService>();
-
-            //services.AddScoped<ICategoryRepo, CategoryRepo>();
-            //services.AddScoped<ICategoryService, CategoryService>();
-
-            //services.AddScoped<IMaterialRepo, MaterialRepo>();
-            //services.AddScoped<IMaterialService, MaterialService>();
-          
-            //services.AddScoped<IOrderRepo, OrderRepo>();
-            //services.AddScoped<IOrderService, OrderService>();
-
-            //services.AddScoped<IZodiacRepo, ZodiacRepo>();
-            //services.AddScoped<IZodiacService, ZodiacService>();
-
-            //services.AddScoped<IImageRepo, ImageRepo>();
-            //services.AddScoped<IImageService, ImageService>();
-
-            //services.AddScoped<ICollectionRepo, CollectionsRepo>();
-            //services.AddScoped<ICollectionService, CollectionService>();
-
-            //services.AddScoped<ICollectionProductRepo, CollectionProductRepo>();
-
-
-            //services.AddScoped<IUserRepo, UserRepo>();
-            //services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<IImageRepo, ImageRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
+            
+            services.AddHttpContextAccessor();        
             return services;
         }
     }

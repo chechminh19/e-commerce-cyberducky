@@ -25,18 +25,27 @@ namespace E_commerce_cyberDucky.Controllers
             _orderService = service;
         }      
         [HttpPost("payos_transfer_handler")]
-        public async Task<IActionResult> payOSTransferHandler([FromBody]WebhookType body)
+        public IActionResult payOSTransferHandler(WebhookType body)
         {
             try
-            {
+            {               
                 WebhookData data = _payOS.verifyPaymentWebhookData(body);
+                if (data == null)
+                {
+                    return BadRequest(new Response(-1, "Invalid data from webhook", null));
+                }
+                //var aa = data.accountNumber;
+                //var bb = data.paymentLinkId;
+                //var cc = data.transactionDateTime;
+                //var dd = data.virtualAccountNumber;
                 string responseCode = data.code;
                 var orderCode = (int)data.orderCode;
-                var order = await _orderRepo.GetOrderByCodePayTransfer(orderCode);
-                if (orderCode != null || responseCode == "00")
+                var order =  _orderRepo.GetOrderByCodePayTransfer(orderCode);
+                //if (orderCode != null || responseCode == "00" || data.desc == "success")
+                if(data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
                 {
-                    var result = await _orderService.PaymentOrder(order.Id);
-                    if(result != null && result.Success == true)
+                    var result =  _orderService.PaymentOrder(order.Id);
+                    if(result != null)
                     {
                         return Ok(new Response(0, "Ok", null));
                     }

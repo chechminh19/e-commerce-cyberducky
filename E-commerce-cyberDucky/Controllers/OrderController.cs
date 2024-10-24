@@ -56,7 +56,7 @@ namespace E_commerce_cyberDucky.Controllers
                     (int)product.Price
                 )).ToList();
                 total = (int)totalPrice;
-                PaymentData paymentData = new PaymentData(orderCode, total, des, items, body.cancelUrl,body.successUrl);
+                PaymentData paymentData = new PaymentData(orderCode, total, des, items, body.cancelUrl,body.returnUrl);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);              
                 return Ok(new Response(0, "success", createPayment));

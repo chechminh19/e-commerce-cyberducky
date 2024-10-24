@@ -125,8 +125,8 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection(); 
 app.UseCors("AllowAll");
 app.UseAuthentication();
-app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
