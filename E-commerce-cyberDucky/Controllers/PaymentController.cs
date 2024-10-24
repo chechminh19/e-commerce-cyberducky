@@ -1,6 +1,7 @@
 ﻿using Application.Enums;
 using Application.IRepository;
 using Application.IService;
+using Application.ViewModels;
 using Azure;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,10 @@ using Net.payOS.Types;
 using Response = E_commerce_cyberDucky.Type.Response;
 namespace E_commerce_cyberDucky.Controllers
 {
-    [EnableCors("AllowAll")]
-    [Route("api/payment")]
+    //[EnableCors("AllowAll")] 
     [ApiController]
-    public class PaymentController : BaseController
+    [Route("api/[controller]")]
+    public class PaymentController : ControllerBase
     {
         private readonly PayOS _payOS;
         private readonly IOrderRepo _orderRepo;
@@ -22,36 +23,32 @@ namespace E_commerce_cyberDucky.Controllers
              _payOS = payOS;
             _orderRepo = order;
             _orderService = service;
-        }
+        }      
         [HttpPost("payos_transfer_handler")]
-        public  async Task<IActionResult> payOSTransferHandler(WebhookType body)
+        public async Task<IActionResult> payOSTransferHandler([FromBody]WebhookType body)
         {
             try
             {
                 WebhookData data = _payOS.verifyPaymentWebhookData(body);
-                int codePay = (int)data.orderCode;
-                var order = await _orderRepo.GetOrderByCodePayTransfer(codePay);
-                if (order == null)
+                string responseCode = data.code;
+                var orderCode = (int)data.orderCode;
+                var order = await _orderRepo.GetOrderByCodePayTransfer(orderCode);
+                if (orderCode != null || responseCode == "00")
                 {
-                    return Ok(new Response(-1, "Order not found", null));
-                }
-                if (data.code == "00")
-                {                    
                     var result = await _orderService.PaymentOrder(order.Id);
-                    if(result.Success == false)
+                    if(result != null && result.Success == true)
                     {
-                        return Ok(new Response(-1, "fail", null));
+                        return Ok(new Response(0, "Ok", null));
                     }
                     return Ok(new Response(0, "Ok", null));
                 }
-                return Ok(new Response(-1, "fail", null));
+                return Ok(new Response(0, "Ok", null));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return Ok(new Response(-1, "fail", null));
             }
-
         }
     }
 }

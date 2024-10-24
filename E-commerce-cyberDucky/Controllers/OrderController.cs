@@ -56,9 +56,9 @@ namespace E_commerce_cyberDucky.Controllers
                     (int)product.Price
                 )).ToList();
                 total = (int)totalPrice;
-                PaymentData paymentData = new PaymentData(orderCode, total, des, items, body.cancelUrl, body.successUrl);
+                PaymentData paymentData = new PaymentData(orderCode, total, des, items, body.cancelUrl,body.successUrl);
 
-                CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
+                CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);              
                 return Ok(new Response(0, "success", createPayment));
             }
             catch (System.Exception exception)
@@ -100,7 +100,7 @@ namespace E_commerce_cyberDucky.Controllers
 
         }
         [HttpGet("{orderId}")]
-        public async Task<IActionResult> GetOrder([FromRoute] int orderId)
+        public async Task<IActionResult> GetOrder([FromRoute] long orderId)
         {
             try
             {

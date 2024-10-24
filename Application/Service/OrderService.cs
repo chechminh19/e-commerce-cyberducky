@@ -5,6 +5,8 @@ using Application.Utils;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Entities;
+using Net.payOS.Types;
+using Net.payOS;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -19,12 +21,15 @@ namespace Application.Service
         private readonly IOrderRepo _orderRepo;
         private readonly IMapper _mapper;
         private readonly IProductRepo _productRepo;
-
-        public OrderService(IOrderRepo orderRepo, IMapper mapper, IProductRepo product)
+        private readonly PayOS _payOs;
+        private readonly IOrderService _orderService;
+        public OrderService(IOrderRepo orderRepo, IMapper mapper, IProductRepo product, PayOS pay, IOrderService order)
         {
             _orderRepo = orderRepo ?? throw new ArgumentNullException(nameof(orderRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _productRepo = product;
+            _payOs = pay;
+            _orderService = order;
         }
 
         public async Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId)
@@ -350,5 +355,36 @@ namespace Application.Service
 
             return serviceResponse;
         }
+        //public async Task<ResultModel> VerifyPaymentWebhookData(WebhookType webhookBody)
+        //{
+        //    WebhookData verifiedData = _payOs.verifyPaymentWebhookData(webhookBody);
+        //    string responseCode = verifiedData.code;
+        //    var orderCode = (int)verifiedData.orderCode;
+
+        //    var order = await _orderRepo.GetOrderByCodePayTransfer(orderCode);
+            
+        //    if (order != null && responseCode == "00")
+        //    {
+        //        var result = await PaymentOrder(order.Id);
+        //                if(result.Success == false)
+        //                {
+        //                return new ResultModel { IsSuccess = false, StatusCode = int.Parse(responseCode), Message = "Payment failed" };
+        //                }
+        //        else
+        //        {
+        //            return new ResultModel { IsSuccess = true, StatusCode = int.Parse(responseCode), Message = "Payment oke" };
+
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (order != null && responseCode != "00")
+        //        {
+        //            return new ResultModel { IsSuccess = false, StatusCode = int.Parse(responseCode), Message = "Payment failed" };
+
+        //        }
+        //    }
+        //    return new ResultModel { IsSuccess = false, StatusCode = int.Parse(responseCode), Message = "Payment failed" };
+        //}
     }    
 }
