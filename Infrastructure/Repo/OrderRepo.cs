@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repo
@@ -74,13 +75,50 @@ namespace Infrastructure.Repo
         public async Task<Order> GetOrderByIdProcessingToPay(int orderId, OrderCart status)
         {
             return await _dbContext.Orders
-        .Where(o => o.Id == orderId && o.Status == (byte)OrderCart.Process)  // Truy vấn theo Id và enum status
+        .Where(o => o.Id == orderId && o.Status == (byte)OrderCart.Process)  // Truy vấn theo order code của payos và enum status
         .FirstOrDefaultAsync();
         }
 
+        public async Task<Order> GetOrderByOrderCode(long orderCode)
+        {
+            // Kiểm tra kiểu dữ liệu của orderCode
+            if (orderCode > int.MaxValue || orderCode < int.MinValue)
+            {
+                // Nếu orderCode không thể chuyển đổi thành int, trả về null
+                return null;
+            }
+
+            int? codePayToCheck = (int?)orderCode;
+
+            try
+            {
+                // Truy vấn đơn hàng từ cơ sở dữ liệu dựa trên CodePay
+                var order =  _dbContext.Orders
+                    .FirstOrDefault(x => x.CodePay == codePayToCheck);
+
+                return order; // Trả về đơn hàng (Order) hoặc null
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại thông báo lỗi nếu có lỗi trong truy vấn
+                Console.WriteLine($"Error occurred while fetching order: {ex.Message}");
+                return null;
+            }
+        }
+
+
         public async Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId)
         {
-            return await _dbContext.OrderDetail.Where(od => od.OrderId == orderId).ToListAsync();
+            try
+            {
+                Console.WriteLine($"Fetching order details for OrderId: {orderId}");
+                return await _dbContext.OrderDetail.Where(od => od.OrderId == orderId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while fetching order details: {ex.Message}");
+                return new List<OrderDetails>(); // Hoặc null, tùy theo ý bạn
+            }
 
         }
         public async Task<int> GetOrderIdByUserIdToUpdateQR(int userId)
@@ -111,6 +149,12 @@ namespace Infrastructure.Repo
         public async Task UpdateOrderDetail(OrderDetails orderDetail)
         {
             _dbContext.OrderDetail.Update(orderDetail);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrderPayment(Order order)
+        {
+            _dbContext.Orders.Update(order);
             await _dbContext.SaveChangesAsync();
         }
     }

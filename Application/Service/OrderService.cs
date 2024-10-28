@@ -13,6 +13,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit.Search;
 
 namespace Application.Service
 {
@@ -25,7 +26,7 @@ namespace Application.Service
         {
             _orderRepo = orderRepo ?? throw new ArgumentNullException(nameof(orderRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _productRepo = product;
+            _productRepo = product ?? throw new ArgumentNullException(nameof(product));
         }
 
         public async Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId)
@@ -150,12 +151,12 @@ namespace Application.Service
             return response;
         }
 
-        public async Task<ServiceResponse<string>> PaymentOrder(int orderId)
+        public async Task<ServiceResponse<string>> PaymentOrder(int orderCode)
         {
             var serviceResponse = new ServiceResponse<string>();
             try
             {
-                Order order = await _orderRepo.GetOrderByIdProcessingToPay(orderId, Enums.OrderCart.Process);
+                Order order = await _orderRepo.GetOrderByIdProcessingToPay(orderCode, Enums.OrderCart.Process);
 
                 if (order == null)
                 {
@@ -165,10 +166,10 @@ namespace Application.Service
                 else
                 {
                     order.Status = (byte)Enums.OrderCart.Completed;                  
-                    DateTime utcNow = DateTime.UtcNow;
-                    TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                    DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
-                    order.PaymentDate = gmtPlus7Now;
+                    //DateTime utcNow = DateTime.UtcNow;
+                    //TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                    //DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
+                    order.PaymentDate = DateTime.UtcNow;
 
                     var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
                     if (updateResponse.Success == false)
@@ -282,6 +283,101 @@ namespace Application.Service
             return false;
         }
 
+        public async Task<ResultModel> UpdateOrderPayment(long orderCode)
+        {
+            var serviceResponse = new ResultModel();
+            try
+            {
+                var orderExists = await _orderRepo.GetOrderByOrderCode(orderCode);
+                Console.WriteLine($"Order Exists ID: {orderExists?.Id}");
+                if (orderExists.Id == null)
+                {
+                    return new ResultModel
+                    {
+                        IsSuccess = false,
+                        StatusCode = 404,
+                        Message = "OrderNotFound",
+                        Data = new PaymentResult
+                        {
+                            Success = false,
+                            Message = "OrderNotfound",
+                            StatusCode = 404
+                        }
+                    };
+                       
+                }
+                else
+                {
+                    orderExists.Status = (byte)Enums.OrderCart.Completed;
+                    //DateTime utcNow = DateTime.UtcNow;
+                    //TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                    //DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
+                    orderExists.PaymentDate = DateTime.Now;
+
+                    var updateResponse = await UpdateProductQuantitiesBasedOnCart(orderExists);
+                    if (updateResponse.Success == false)
+                    {
+                        serviceResponse.IsSuccess = false;
+                        serviceResponse.Message = updateResponse.Message;
+                        return serviceResponse;
+                    }
+
+                    await _orderRepo.UpdateOrderPayment(orderExists);
+                    serviceResponse.IsSuccess = true;
+                    serviceResponse.Message = "Payment ok";
+                    return serviceResponse;
+
+                   // var orderEmailDto = new ShowOrderSuccessEmailDTO
+                   // {
+                   //     OrderId = orderExists.Id,
+                   //   UserName = orderExists.User.FullName,
+                   //    PaymentDate = orderExists.PaymentDate.Value,
+                   //  OrderItems = orderExists.OrderDetails.Select(od => new OrderItemEmailDto
+                   //     {
+                   //         ProductName = od.Product.NameProduct,
+                   //       Quantity = od.QuantityProduct,
+                   //         Price = od.Price
+                   //   }).ToList()
+                   // };
+                   // ////// Send payment success email
+                   //var userEmail = orderExists.User?.Email; // Assuming the Order object has a User property with an Email
+                   // if (!string.IsNullOrEmpty(userEmail))
+                   // {
+                   //    var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
+
+                   //   if (emailSent)
+                   //  {
+                   //        serviceResponse.IsSuccess = true;
+                   //       serviceResponse.Message = "Payment successful and email sent.";
+                   //    }
+                   //    else
+                   // {
+                   //       serviceResponse.IsSuccess = true;
+                   //         serviceResponse.Message = "Payment successful but email sending failed.";
+                   //     }
+                   // }
+                   // else
+                   // {
+                   //     serviceResponse.IsSuccess = true;
+                   //     serviceResponse.Message = "Payment successful but no user email found.";
+                   // }
+                }
+            }
+            catch (DbException e)
+            {
+                serviceResponse.IsSuccess = false;
+                serviceResponse.Message = "Database error occurred.";
+                //serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                serviceResponse.IsSuccess = false;
+                serviceResponse.Message = "Error error occurred.";
+                //serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<bool>> UpdateOrderQuantity(int orderId, int productId, int quantity)
         {
             var response = new ServiceResponse<bool>();
@@ -317,23 +413,38 @@ namespace Application.Service
             try
             {
                 var orderDetails = await _orderRepo.GetOrderDetailsByOrderId(order.Id);
-                if (orderDetails == null || !orderDetails.Any())
+                if (orderDetails == null)
                 {
                     serviceResponse.Success = false;
                     serviceResponse.Message = "Order not found or no items in cart.";
                     return serviceResponse;
                 }
 
-                var productUpdates = orderDetails
-                 .GroupBy(detail => detail.ProductId)
-                 .Select(group => new ProductUpdate
-                 {
-                     ProductId = group.Key,
-                     QuantityChange = -group.Sum(detail => detail.QuantityProduct)
-                 })
-                 .ToList();
+                // Lấy tất cả sản phẩm từ OrderDetails và cập nhật số lượng
+                foreach (var detail in orderDetails)
+                {
+                    var product = await _productRepo.GetProductById(detail.ProductId);
+                    if (product == null)
+                    {
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = $"Product not found for ID: {detail.ProductId}";
+                        return serviceResponse;
+                    }
 
-                await _productRepo.UpdateProductQuantities(productUpdates);
+                    // Trừ số lượng sản phẩm trong bảng Product
+                    product.Quantity -= detail.QuantityProduct;
+
+                    if (product.Quantity < 0)
+                    {
+                        throw new InvalidOperationException($"Insufficient quantity for product ID: {product.Id}");
+                    }
+
+                    // Cập nhật sản phẩm
+                    await _productRepo.UpdateProduct(product);
+                }
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                //await _productRepo.SaveChangesPay();
 
                 serviceResponse.Success = true;
                 serviceResponse.Message = "Product quantities updated successfully.";
@@ -350,6 +461,7 @@ namespace Application.Service
             }
 
             return serviceResponse;
-        }       
+        }
+       
     }    
 }

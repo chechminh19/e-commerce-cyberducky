@@ -44,7 +44,7 @@ namespace E_commerce_cyberDucky.Controllers
                 int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
                 var des = productList.FirstOrDefault().DescriptionProduct;
                 bool isUpdated = await _orderService.UpdateOrderCodePay(orderId, orderCode);
-                if (!isUpdated)
+                if (isUpdated == false)
                 {
                     return Ok(new Response(-1, "Failed to update CodePay", null));
                 }

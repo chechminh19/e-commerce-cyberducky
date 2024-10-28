@@ -10,6 +10,8 @@ namespace Application.IRepository
 {
     public interface IProductRepo
     {
+        Task SaveChangesPay();
+        Task<Product> GetProductByIdToPay(int productId);
         Task<Product> GetProductById(int id);
         Task<IEnumerable<Product>> GetAllProduct();
         Task<IEnumerable<Product>> GetTypeProduct(string idType);

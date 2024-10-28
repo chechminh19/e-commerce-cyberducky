@@ -18,46 +18,43 @@ namespace E_commerce_cyberDucky.Controllers
         private readonly PayOS _payOS;
         private readonly IOrderRepo _orderRepo;
         private readonly IOrderService _orderService;
+
         public PaymentController(PayOS payOS, IOrderRepo order, IOrderService service)
         {
              _payOS = payOS;
             _orderRepo = order;
             _orderService = service;
-        }      
+        }
         [HttpPost("payos_transfer_handler")]
-        public IActionResult payOSTransferHandler(WebhookType body)
+        public async Task<IActionResult> payOSTransferHandler(WebhookType body)
         {
-            try
-            {               
-                WebhookData data = _payOS.verifyPaymentWebhookData(body);
-                if (data == null)
+          
+                try
                 {
-                    return BadRequest(new Response(-1, "Invalid data from webhook", null));
-                }
-                //var aa = data.accountNumber;
-                //var bb = data.paymentLinkId;
-                //var cc = data.transactionDateTime;
-                //var dd = data.virtualAccountNumber;
-                string responseCode = data.code;
-                var orderCode = (int)data.orderCode;
-                var order =  _orderRepo.GetOrderByCodePayTransfer(orderCode);
-                //if (orderCode != null || responseCode == "00" || data.desc == "success")
-                if(data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
-                {
-                    var result =  _orderService.PaymentOrder(order.Id);
-                    if(result != null)
+                    WebhookData data = _payOS.verifyPaymentWebhookData(body);
+                    //string responseCode = data.code;
+                    //var orderCode = (int)data.orderCode;
+                    //var order =  _orderRepo.GetOrderByCodePayTransfer(orderCode);
+                    //if (orderCode != null || responseCode == "00" || data.desc == "success")
+
+                    // white-list test webhook case
+                    //if (data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
+                    //{
+                    //    return Ok(new Response(0, "Ok", null));
+                    //}
+                    if (data.code == "00")
                     {
-                        return Ok(new Response(0, "Ok", null));
+                        var result = await _orderService.UpdateOrderPayment(data.orderCode);
+                        return Ok(new Response(0, "Ok", result));
                     }
                     return Ok(new Response(0, "Ok", null));
                 }
-                return Ok(new Response(0, "Ok", null));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return Ok(new Response(-1, "fail", null));
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return Ok(new Response(-1, "fail", null));
+                }
+            
         }
     }
 }

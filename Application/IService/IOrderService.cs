@@ -12,7 +12,7 @@ namespace Application.IService
 {
     public interface IOrderService
     {
-        //Task<ResultModel> VerifyPaymentWebhookData(WebhookType webhookBody);     
+        Task<ResultModel> UpdateOrderPayment(long orderCode);     
         Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order);
         Task<ServiceResponse<string>> PaymentOrder(int orderId);
         Task<bool> UpdateOrderCodePay(int orderId, int codePay);

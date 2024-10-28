@@ -7,14 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Logging;
 namespace Infrastructure.Repo
 {
-    public class ProductRepo :  GenericRepo<Product> , IProductRepo
+    public class ProductRepo : GenericRepo<Product>, IProductRepo
     {
         private readonly AppDbContext _dbContext;
-        public ProductRepo(AppDbContext context) : base(context)
+        private readonly ILogger<ProductRepo> _logger;
+        public ProductRepo(AppDbContext context, ILogger<ProductRepo> logger) : base(context)
         {
             _dbContext = context;
+            _logger = logger;
         }
 
         public async Task AddProduct(Product product)
@@ -85,6 +89,11 @@ namespace Infrastructure.Repo
             throw new NotImplementedException();
         }
 
+        public async Task<Product> GetProductByIdToPay(int productId)
+        {
+            return await _dbContext.Products.FindAsync(productId);
+        }
+
         public double GetProductPriceById(int productId)
         {
             return _dbContext.Products.FirstOrDefault(p => p.Id == productId)?.Price ?? 0;
@@ -103,22 +112,46 @@ namespace Infrastructure.Repo
               .ToListAsync();
         }
 
-        public Task UpdateProduct(Product product)
+        public async Task SaveChangesPay()
         {
-            throw new NotImplementedException();
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateProduct(Product product)
+        {
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateProductQuantities(IEnumerable<ProductUpdate> products)
         {
-            foreach (var productInfo in products)
+            // Make sure to log before doing anything with the context
+            _logger.LogInformation("list product first: ");
+            foreach (var product in products)
             {
-                var product = await _dbContext.Products.FindAsync(productInfo.ProductId);
+                _logger.LogInformation($"ProductId: {product.ProductId}, QuantityChange: {product.QuantityChange}");
+            }
+
+            foreach (var update in products)
+            {
+                var product = await _dbContext.Products.FindAsync(update.ProductId);
                 if (product != null)
                 {
-                    product.Quantity += productInfo.QuantityChange;
+                    product.Quantity += update.QuantityChange;
+
+                    if (product.Quantity < 0)
+                    {
+                        throw new InvalidOperationException($"Insufficient quantity for product ID: {product.Id}");
+                    }
+
                     _dbContext.Products.Update(product);
                 }
+                else
+                {
+                    throw new InvalidOperationException($"Product not found with ID: {update.ProductId}");
+                }
             }
+
+            // Save changes asynchronously
             await _dbContext.SaveChangesAsync();
         }
     }

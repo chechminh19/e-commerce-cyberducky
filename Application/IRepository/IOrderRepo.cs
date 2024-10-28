@@ -10,6 +10,7 @@ namespace Application.IRepository
 {
     public interface IOrderRepo : IGenericRepo<Order>
     {
+        Task<Order> GetOrderByOrderCode(long orderCode);
         Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId);
         Task<Order> GetOrderByCodePayTransfer(int codePay);
         Task UpdateOrderCodePay(Order order);
@@ -17,7 +18,8 @@ namespace Application.IRepository
         Task<List<OrderDetails>> GetAllOrderCart(int userId);
         Task<int> GetOrderIdByUserIdToUpdateQR(int userId);
         Task<Order> CheckUserWithOrder(int userId); 
-        Task AddOrder(Order order); 
+        Task AddOrder(Order order);
+        Task UpdateOrderPayment(Order order);
         Task SaveChangesAsync();
         Task UpdateOrderDetail(OrderDetails orderDetail);
         Task AddOrderDetail(OrderDetails orderDetail);
