@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_commerce_cyberDucky.Controllers
 {
     [EnableCors("AllowAll")]
-    [Route("api/authentication")]
+    [Route("api/login")]
     [ApiController]
     public class AuthenController : BaseController
     {

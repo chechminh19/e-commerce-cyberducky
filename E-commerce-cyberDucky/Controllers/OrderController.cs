@@ -7,6 +7,7 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Net.payOS;
 using Net.payOS.Types;
 using System.Linq;
@@ -162,6 +163,15 @@ namespace E_commerce_cyberDucky.Controllers
             if (!result.Success) return BadRequest(result);
 
             return Ok(result);
+        }
+        /// <summary>
+        /// get all order of customer for admin
+        /// </summary>      
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrdersForAdmin();
+            return Ok(orders);
         }
     }
 }

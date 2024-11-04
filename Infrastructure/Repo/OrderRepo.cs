@@ -65,6 +65,14 @@ namespace Infrastructure.Repo
                 .ToList();
         }
 
+        public async Task<List<Order>> GetAllOrdersForAdmin()
+        {
+            return await _dbContext.Orders
+          .Include(o => o.OrderDetails)
+          .Include(o => o.User)
+          .ToListAsync();
+        }
+
         public Task<Order> GetOrderByCodePayTransfer(int codePay)
         {
            return  _dbContext.Orders

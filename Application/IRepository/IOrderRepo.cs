@@ -25,5 +25,6 @@ namespace Application.IRepository
         Task AddOrderDetail(OrderDetails orderDetail);
         Task<Order?> GetOrderWithDetailsAsync(int orderId);
         Task Delete(Order order);
+        Task<List<Order>> GetAllOrdersForAdmin();
     }
 }

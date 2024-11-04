@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MailKit.Search;
+using Application.ViewModels.UserDTO;
 
 namespace Application.Service
 {
@@ -149,6 +150,23 @@ namespace Application.Service
             }
 
             return response;
+        }
+
+        public async Task<List<OrderForAdminDTO>> GetAllOrdersForAdmin()
+        {
+            var orders = await _orderRepo.GetAllOrdersForAdmin();
+
+            // Map dữ liệu và tính PriceTotal
+            return orders.Select(o => new OrderForAdminDTO
+            {
+                Id = o.Id,
+                UserId = o.UserId,
+                UserName = o.User != null ? o.User.FullName : null,
+                PaymentDate = o.PaymentDate,
+                Status = o.Status,
+                CodePay = o.CodePay,
+                PriceTotal = o.OrderDetails.Sum(od => od.QuantityProduct * od.Price)
+            }).ToList();
         }
 
         public async Task<ServiceResponse<string>> PaymentOrder(int orderCode)
