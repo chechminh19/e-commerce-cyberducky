@@ -28,6 +28,11 @@ namespace E_commerce_cyberDucky.Controllers
             _orderService = orderService;
             _payOS = payOS;
         }
+        /// <summary>
+        /// create order to payment
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
         [HttpPost("create")]
         public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
         {
@@ -67,7 +72,11 @@ namespace E_commerce_cyberDucky.Controllers
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-        }
+        }/// <summary>
+        /// update order by self
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpPut("{orderId}")]
         public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
         {
@@ -84,6 +93,11 @@ namespace E_commerce_cyberDucky.Controllers
             }
 
         }
+        /// <summary>
+        /// confirm by self
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
         [HttpPost("confirm-webhook")]
         public async Task<IActionResult> ConfirmWebhook(ConfirmWebhook body)
         {
@@ -100,6 +114,11 @@ namespace E_commerce_cyberDucky.Controllers
             }
 
         }
+        /// <summary>
+        /// get order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrder([FromRoute] long orderId)
         {

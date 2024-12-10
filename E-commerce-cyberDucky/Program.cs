@@ -28,8 +28,6 @@ var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection")),
      ServiceLifetime.Scoped);
-// Use connection string directly
-
 
 builder.Services.Configure<Cloud>(configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(myConfig);
@@ -83,8 +81,6 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

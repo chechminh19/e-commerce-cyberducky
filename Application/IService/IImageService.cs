@@ -12,6 +12,5 @@ namespace Application.IService
     {
         Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort);
         Task<ServiceResponse<ProductImageDTO>> GetImageInforById(int id);
-        //Task<ServiceResponse<string>> DeleteProductImage(int id);
     }
 }

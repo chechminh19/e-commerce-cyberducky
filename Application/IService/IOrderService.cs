@@ -15,7 +15,6 @@ namespace Application.IService
     {
         Task<ResultModel> UpdateOrderPayment(long orderCode);     
         Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order);
-        Task<ServiceResponse<string>> PaymentOrder(int orderId);
         Task<bool> UpdateOrderCodePay(int orderId, int codePay);
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId);
         Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId);

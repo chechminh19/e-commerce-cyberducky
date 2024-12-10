@@ -70,7 +70,7 @@ namespace Application.Service
                     // Default to sorting by Id in descending order (newest first) when no sort or other sort types
                     _ => products.OrderByDescending(p => p.Id)
                 };
-                var productDTOs = MapToDTO(products); // Map products to ProductDTO
+                var productDTOs = MapToDTO(products);
 
                 // Apply pagination
                 var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
@@ -109,7 +109,7 @@ namespace Application.Service
                     // Default to sorting by Id in descending order (newest first) when no sort or other sort types
                     _ => products.OrderByDescending(p => p.Id)
                 };
-                var productDTOs = MapToDTO(products); // Map products to ProductDTO
+                var productDTOs = MapToDTO(products);
 
                 // Apply pagination
                 var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
@@ -180,7 +180,6 @@ namespace Application.Service
                     return response;
                 }
 
-                // Retrieve the existing product from the repository
                 var existingProduct = await _productRepo.GetProductById(cproduct.Id);
                 if (existingProduct == null)
                 {
@@ -188,20 +187,15 @@ namespace Application.Service
                     response.Message = "Product not found";
                     return response;
                 }
-
                 // Map updated values from DTO to the existing entity
                 MapCreateProductDTOToEntity(cproduct, existingProduct);
 
-                // Update the product in the repository
                 await _productRepo.UpdateProduct(existingProduct);              
                 response.Data = "Product updated successfully";
                 response.Success = true;
             }
             catch (Exception ex)
             {
-                // Log the exception
-
-
                 response.Success = false;
                 response.Message = $"Failed to update product: {ex.Message}";
             }
@@ -227,7 +221,6 @@ namespace Application.Service
         public async Task<ServiceResponse<string>> DeleteProductAsync(int id)
         {
             var response = new ServiceResponse<string>();
-
             try
             {
                 var existingProduct = await _productRepo.GetProductById(id);

@@ -16,7 +16,14 @@ namespace E_commerce_cyberDucky.Controllers
         {
             _imageService = imageService;
         }
-       
+        /// <summary>
+        /// view image all
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="search"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
         //[Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> AllImageInfors([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
@@ -28,6 +35,11 @@ namespace E_commerce_cyberDucky.Controllers
             }
             return Ok(result);
         }
+        /// <summary>
+        /// get image by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         //[Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImageInforById(int id)
@@ -38,21 +50,7 @@ namespace E_commerce_cyberDucky.Controllers
                 return NotFound(result);
             }
             return Ok(result);
-        }
-
-
-        //[Authorize(Roles = "Staff,Admin")]
-        //[HttpDelete("image/{id}")]
-        //public async Task<IActionResult> DeleteProductImage(int id)
-        //{
-        //    var result = await _imageService.DeleteProductImage(id);
-        //    if (!result.Success)
-        //    {
-        //        return NotFound(result);
-        //    }
-        //    return Ok(result);
-        //}
-
+        }    
     }
 }
 

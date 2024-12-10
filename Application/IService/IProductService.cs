@@ -16,7 +16,5 @@ namespace Application.IService
         Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductType(int page, int pageSize, string search, string sort, string idType);
         Task<ServiceResponse<string>> UpdateProductAsync(CreateProductDTO cproduct);
         Task<ServiceResponse<string>> DeleteProductAsync(int id);
-
-        //Task<ServiceResponse<ProductStatisticsDTO>> GetProductStatisticsAsync();
     }
 }

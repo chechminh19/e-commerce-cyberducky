@@ -83,16 +83,14 @@ namespace Infrastructure.Repo
         public async Task<Order> GetOrderByIdProcessingToPay(int orderId, OrderCart status)
         {
             return await _dbContext.Orders
-        .Where(o => o.Id == orderId && o.Status == (byte)OrderCart.Process)  // Truy vấn theo order code của payos và enum status
+        .Where(o => o.Id == orderId && o.Status == (byte)OrderCart.Process)
         .FirstOrDefaultAsync();
         }
 
         public async Task<Order> GetOrderByOrderCode(long orderCode)
         {
-            // Kiểm tra kiểu dữ liệu của orderCode
             if (orderCode > int.MaxValue || orderCode < int.MinValue)
             {
-                // Nếu orderCode không thể chuyển đổi thành int, trả về null
                 return null;
             }
 
@@ -100,15 +98,13 @@ namespace Infrastructure.Repo
 
             try
             {
-                // Truy vấn đơn hàng từ cơ sở dữ liệu dựa trên CodePay
                 var order =  _dbContext.Orders
                     .FirstOrDefault(x => x.CodePay == codePayToCheck);
 
-                return order; // Trả về đơn hàng (Order) hoặc null
+                return order;
             }
             catch (Exception ex)
             {
-                // Ghi lại thông báo lỗi nếu có lỗi trong truy vấn
                 Console.WriteLine($"Error occurred while fetching order: {ex.Message}");
                 return null;
             }
@@ -125,15 +121,15 @@ namespace Infrastructure.Repo
             catch (Exception ex)
             {
                 Console.WriteLine($"Error occurred while fetching order details: {ex.Message}");
-                return new List<OrderDetails>(); // Hoặc null, tùy theo ý bạn
+                return new List<OrderDetails>();
             }
 
         }
         public async Task<int> GetOrderIdByUserIdToUpdateQR(int userId)
         {
             var order = await _dbContext.Orders
-        .FirstOrDefaultAsync(o => o.UserId == userId && o.Status == 1); // Status = 0 có thể là trạng thái đang chờ thanh toán
-            return order?.Id ?? 0; // Trả về OrderId hoặc 0 nếu không tìm thấy
+        .FirstOrDefaultAsync(o => o.UserId == userId && o.Status == 1);
+            return order?.Id ?? 0;
         }
 
         public async Task<Order?> GetOrderWithDetailsAsync(int orderId)
@@ -150,8 +146,8 @@ namespace Infrastructure.Repo
 
         public async Task UpdateOrderCodePay(Order order)
         {
-            _dbContext.Orders.Update(order);  // Cập nhật order
-            await _dbContext.SaveChangesAsync();  // Lưu thay đổi
+            _dbContext.Orders.Update(order);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateOrderDetail(OrderDetails orderDetail)

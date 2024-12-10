@@ -16,16 +16,12 @@ namespace Infrastructure.Repo
         {
             _dbContext = context;
         }
-
-       
-
+   
         public async Task<bool> CheckEmailAddressExisted(string sEmail)
         {
             return await _dbContext.Users.AnyAsync(u => u.Email == sEmail);
         }
-
-       
-
+     
         public async Task<User> GetUserByConfirmationToken(string sToken)
         {
             return await _dbContext.Users.SingleOrDefaultAsync(

@@ -156,7 +156,6 @@ namespace Application.Service
         {
             var orders = await _orderRepo.GetAllOrdersForAdmin();
 
-            // Map dữ liệu và tính PriceTotal
             return orders.Select(o => new OrderForAdminDTO
             {
                 Id = o.Id,
@@ -169,86 +168,7 @@ namespace Application.Service
             }).ToList();
         }
 
-        public async Task<ServiceResponse<string>> PaymentOrder(int orderCode)
-        {
-            var serviceResponse = new ServiceResponse<string>();
-            try
-            {
-                Order order = await _orderRepo.GetOrderByIdProcessingToPay(orderCode, Enums.OrderCart.Process);
-
-                if (order == null)
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "not found orderId";
-                }
-                else
-                {
-                    order.Status = (byte)Enums.OrderCart.Completed;                  
-                    //DateTime utcNow = DateTime.UtcNow;
-                    //TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                    //DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
-                    order.PaymentDate = DateTime.UtcNow;
-
-                    var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
-                    if (updateResponse.Success == false)
-                    {
-                        serviceResponse.Success = false;
-                        serviceResponse.Message = updateResponse.Message;
-                        serviceResponse.ErrorMessages = updateResponse.ErrorMessages;
-                        return serviceResponse;
-                    }
-                    await _orderRepo.SaveChangesAsync();
-                    //await transaction.CommitAsync();
-                    var orderEmailDto = new ShowOrderSuccessEmailDTO
-                    {
-                        OrderId = order.Id,
-                        UserName = order.User.FullName,
-                        PaymentDate = order.PaymentDate.Value,
-                        OrderItems = order.OrderDetails.Select(od => new OrderItemEmailDto
-                        {
-                            ProductName = od.Product.NameProduct,
-                            Quantity = od.QuantityProduct,
-                            Price = od.Price
-                        }).ToList()
-                    };
-                    // Send payment success email
-                    var userEmail = order.User?.Email; // Assuming the Order object has a User property with an Email
-                    if (!string.IsNullOrEmpty(userEmail))
-                    {
-                        var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
-
-                        if (emailSent)
-                        {
-                            serviceResponse.Success = true;
-                            serviceResponse.Message = "Payment successful and email sent.";
-                        }
-                        else
-                        {
-                            serviceResponse.Success = true;
-                            serviceResponse.Message = "Payment successful but email sending failed.";
-                        }
-                    }
-                    else
-                    {
-                        serviceResponse.Success = true;
-                        serviceResponse.Message = "Payment successful but no user email found.";
-                    }
-                }
-            }
-            catch (DbException e)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "Database error occurred.";
-                serviceResponse.ErrorMessages = new List<string> { e.Message };
-            }
-            catch (Exception e)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "Error error occurred.";
-                serviceResponse.ErrorMessages = new List<string> { e.Message };
-            }
-            return serviceResponse;
-        }
+        
 
         public async Task<ServiceResponse<bool>> RemoveProductFromCart(int orderId, int productId)
         {
@@ -291,11 +211,11 @@ namespace Application.Service
 
         public async Task<bool> UpdateOrderCodePay(int orderId, int codePay)
         {
-            var order = await _orderRepo.GetOrderByIdProcessingToPay(orderId, Enums.OrderCart.Process);  // Lấy order từ DB
+            var order = await _orderRepo.GetOrderByIdProcessingToPay(orderId, Enums.OrderCart.Process);
             if (order != null)
             {
-                order.CodePay = codePay;  // Cập nhật mã CodePay
-                await _orderRepo.UpdateOrderCodePay(order);  // Lưu cập nhật vào DB
+                order.CodePay = codePay;  // Update CodePay
+                await _orderRepo.UpdateOrderCodePay(order);
                 return true;
             }
             return false;
@@ -338,8 +258,41 @@ namespace Application.Service
                     }
 
                     await _orderRepo.UpdateOrderPayment(orderExists);
-                    serviceResponse.IsSuccess = true;
-                    serviceResponse.Message = "Payment ok";
+
+                    var orderEmailDto = new ShowOrderSuccessEmailDTO
+                    {
+                        OrderId = orderExists.Id,
+                        UserName = orderExists.User.FullName,
+                        PaymentDate = orderExists.PaymentDate.Value,
+                        OrderItems = orderExists.OrderDetails.Select(od => new OrderItemEmailDto
+                        {
+                            ProductName = od.Product.NameProduct,
+                            Quantity = od.QuantityProduct,
+                            Price = od.Price
+                        }).ToList()
+                    };
+
+                    var userEmail = orderExists.User?.Email;
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
+
+                        if (emailSent)
+                        {
+                            serviceResponse.IsSuccess = true;
+                            serviceResponse.Message = "Payment successful and email sent.";
+                        }
+                        else
+                        {
+                            serviceResponse.IsSuccess = true;
+                            serviceResponse.Message = "Payment successful but email sending failed.";
+                        }
+                    }
+                    else
+                    {
+                        serviceResponse.IsSuccess = true;
+                        serviceResponse.Message = "Payment successful but no user email found.";
+                    }
                     return serviceResponse;                 
                 }
             }
@@ -347,13 +300,11 @@ namespace Application.Service
             {
                 serviceResponse.IsSuccess = false;
                 serviceResponse.Message = "Database error occurred.";
-                //serviceResponse.ErrorMessages = new List<string> { e.Message };
             }
             catch (Exception e)
             {
                 serviceResponse.IsSuccess = false;
                 serviceResponse.Message = "Error error occurred.";
-                //serviceResponse.ErrorMessages = new List<string> { e.Message };
             }
             return serviceResponse;
         }
@@ -400,7 +351,6 @@ namespace Application.Service
                     return serviceResponse;
                 }
 
-                // Lấy tất cả sản phẩm từ OrderDetails và cập nhật số lượng
                 foreach (var detail in orderDetails)
                 {
                     var product = await _productRepo.GetProductById(detail.ProductId);
@@ -411,7 +361,6 @@ namespace Application.Service
                         return serviceResponse;
                     }
 
-                    // Trừ số lượng sản phẩm trong bảng Product
                     product.Quantity -= detail.QuantityProduct;
 
                     if (product.Quantity < 0)
@@ -419,16 +368,10 @@ namespace Application.Service
 
                         serviceResponse.Success = false;
                         serviceResponse.Message = $"Insufficient quantity for product ID: {product.Id}";
-                        return serviceResponse; // Dừng lại tại đây nếu không đủ số lượng
+                        return serviceResponse;
                     }
-
-                    // Cập nhật sản phẩm
                     await _productRepo.UpdateProduct(product);
                 }
-
-                // Lưu thay đổi vào cơ sở dữ liệu
-                //await _productRepo.SaveChangesPay();
-
                 serviceResponse.Success = true;
                 serviceResponse.Message = "Product quantities updated successfully.";
             }

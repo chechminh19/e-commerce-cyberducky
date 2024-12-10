@@ -25,6 +25,11 @@ namespace E_commerce_cyberDucky.Controllers
             _orderRepo = order;
             _orderService = service;
         }
+        /// <summary>
+        /// update order after pyament by self
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
         [HttpPost("payos_transfer_handler")]
         public async Task<IActionResult> payOSTransferHandler(WebhookType body)
         {

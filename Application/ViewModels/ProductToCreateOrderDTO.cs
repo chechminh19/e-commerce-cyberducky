@@ -13,11 +13,8 @@ namespace Application.ViewModels
         public string DescriptionProduct { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
-        //public int NameTypeProduct { get; set; }
         public string NameTypeProduct { get; set; }
-        //public int NameMaterial { get; set; }
         public string NameMaterial { get; set; }
-        //public int NameColor { get; set; }
         public string NameColor { get; set; }
         public string ImageUrl { get; set; }
         public int OrderId { get; set; }

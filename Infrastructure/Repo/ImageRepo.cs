@@ -26,14 +26,6 @@ namespace Infrastructure.Repo
         {
             return _dbContext.ProductImage.ToList();
         }
-        //public async Task DeleteProductImage(int id)
-        //{
-        //    var iproduct = await _dbContext.ProductImage.FindAsync(id);
-        //    if (iproduct != null)
-        //    {
-        //        _dbContext.ProductImage.Remove(iproduct);
-        //        await _dbContext.SaveChangesAsync();
-        //    }
-        //}
+      
     }
 }

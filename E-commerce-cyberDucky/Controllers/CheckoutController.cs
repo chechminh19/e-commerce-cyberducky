@@ -11,7 +11,10 @@ namespace E_commerce_cyberDucky.Controllers
         public CheckoutController(PayOS payOS) {
             _payOS = payOS;
         }
-        
+        /// <summary>
+        /// no need use api
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("/create-payment-link")]
         public async Task<IActionResult> Checkout()
         {
