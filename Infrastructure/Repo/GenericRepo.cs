@@ -1,5 +1,6 @@
 ﻿using Application.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,20 @@ namespace Infrastructure.Repo
         {
             _ = await _dbSet.AddAsync(entity);
             _ = await _appDbContext.SaveChangesAsync();
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _appDbContext.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
+        {
+            await transaction.CommitAsync();
+        }
+
+        public async Task RollbackTransactionAsync(IDbContextTransaction transaction)
+        {
+            await transaction.RollbackAsync();
         }
 
         public Task<List<T>> GetAllAsync()

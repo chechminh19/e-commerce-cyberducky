@@ -119,6 +119,7 @@ namespace Infrastructure.Repo
 
         public async Task UpdateProduct(Product product)
         {
+            _dbContext.Products.Update(product);
             await _dbContext.SaveChangesAsync();
         }
 

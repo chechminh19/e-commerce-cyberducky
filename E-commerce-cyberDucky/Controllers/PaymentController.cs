@@ -31,17 +31,7 @@ namespace E_commerce_cyberDucky.Controllers
           
                 try
                 {
-                    WebhookData data = _payOS.verifyPaymentWebhookData(body);
-                    //string responseCode = data.code;
-                    //var orderCode = (int)data.orderCode;
-                    //var order =  _orderRepo.GetOrderByCodePayTransfer(orderCode);
-                    //if (orderCode != null || responseCode == "00" || data.desc == "success")
-
-                    // white-list test webhook case
-                    //if (data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
-                    //{
-                    //    return Ok(new Response(0, "Ok", null));
-                    //}
+                    WebhookData data = _payOS.verifyPaymentWebhookData(body);                    
                     if (data.code == "00")
                     {
                         var result = await _orderService.UpdateOrderPayment(data.orderCode);

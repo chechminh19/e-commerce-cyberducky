@@ -326,10 +326,7 @@ namespace Application.Service
                 }
                 else
                 {
-                    orderExists.Status = (byte)Enums.OrderCart.Completed;
-                    //DateTime utcNow = DateTime.UtcNow;
-                    //TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                    //DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
+                    orderExists.Status = (byte)Enums.OrderCart.Completed;                  
                     orderExists.PaymentDate = DateTime.Now;
 
                     var updateResponse = await UpdateProductQuantitiesBasedOnCart(orderExists);
@@ -343,42 +340,7 @@ namespace Application.Service
                     await _orderRepo.UpdateOrderPayment(orderExists);
                     serviceResponse.IsSuccess = true;
                     serviceResponse.Message = "Payment ok";
-                    return serviceResponse;
-
-                   // var orderEmailDto = new ShowOrderSuccessEmailDTO
-                   // {
-                   //     OrderId = orderExists.Id,
-                   //   UserName = orderExists.User.FullName,
-                   //    PaymentDate = orderExists.PaymentDate.Value,
-                   //  OrderItems = orderExists.OrderDetails.Select(od => new OrderItemEmailDto
-                   //     {
-                   //         ProductName = od.Product.NameProduct,
-                   //       Quantity = od.QuantityProduct,
-                   //         Price = od.Price
-                   //   }).ToList()
-                   // };
-                   // ////// Send payment success email
-                   //var userEmail = orderExists.User?.Email; // Assuming the Order object has a User property with an Email
-                   // if (!string.IsNullOrEmpty(userEmail))
-                   // {
-                   //    var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
-
-                   //   if (emailSent)
-                   //  {
-                   //        serviceResponse.IsSuccess = true;
-                   //       serviceResponse.Message = "Payment successful and email sent.";
-                   //    }
-                   //    else
-                   // {
-                   //       serviceResponse.IsSuccess = true;
-                   //         serviceResponse.Message = "Payment successful but email sending failed.";
-                   //     }
-                   // }
-                   // else
-                   // {
-                   //     serviceResponse.IsSuccess = true;
-                   //     serviceResponse.Message = "Payment successful but no user email found.";
-                   // }
+                    return serviceResponse;                 
                 }
             }
             catch (DbException e)
@@ -454,7 +416,10 @@ namespace Application.Service
 
                     if (product.Quantity < 0)
                     {
-                        throw new InvalidOperationException($"Insufficient quantity for product ID: {product.Id}");
+
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = $"Insufficient quantity for product ID: {product.Id}";
+                        return serviceResponse; // Dừng lại tại đây nếu không đủ số lượng
                     }
 
                     // Cập nhật sản phẩm

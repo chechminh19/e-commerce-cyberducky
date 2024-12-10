@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace Application.IRepository
         Task Update(T entity);
         Task Remove(T entity);
         void UpdateE(T entity);
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task CommitTransactionAsync(IDbContextTransaction transaction);
+        Task RollbackTransactionAsync(IDbContextTransaction transaction);
     }
 }

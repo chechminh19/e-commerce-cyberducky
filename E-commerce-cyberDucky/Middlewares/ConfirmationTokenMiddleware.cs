@@ -29,7 +29,7 @@ namespace E_commerce_cyberDucky.Middlewares
                         user.IsConfirmed = true;
                         user.ConfirmationToken = null;
                         await unitOfWork.SaveChangeAsync();                       
-                        context.Response.Redirect("https://cyberducky.vercel.app/login");
+                        context.Response.Redirect("https://cyberducky-thongnvts-projects.vercel.app/login");
                         return;
                     }
                 }
