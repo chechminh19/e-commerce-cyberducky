@@ -33,7 +33,7 @@ namespace ZodiacJewelryWebApI
             services.AddScoped<IAuthenService, AuthenService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IImageService, ImageService>();  
                 
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IOrderRepo, OrderRepo>();

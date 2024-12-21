@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>E-commerce-cyberDucky</name>
+    </assembly>
+    <members>
+        <member name="M:E_commerce_cyberDucky.Controllers.AuthenController.Register(Application.ViewModels.UserDTO.RegisterDTO)">
+            <summary>
+            register for customer
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.AuthenController.LoginAsync(Application.ViewModels.UserDTO.LoginUserDTO)">
+            <summary>
+            login
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.CheckoutController.Checkout">
+            <summary>
+            no need use api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ImageController.AllImageInfors(System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            view image all
+            </summary>
+            <param name="page"></param>
+            <param name="pageSize"></param>
+            <param name="search"></param>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ImageController.GetImageInforById(System.Int32)">
+            <summary>
+            get image by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.CreatePaymentLink(E_commerce_cyberDucky.Type.CreatePaymentLinkRequest)">
+            <summary>
+            create order to payment
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.CancelOrder(System.Int32)">
+            <summary>
+            update order by self
+            </summary>
+            <param name="orderId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.ConfirmWebhook(E_commerce_cyberDucky.Type.ConfirmWebhook)">
+            <summary>
+            confirm by self
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.GetOrder(System.Int64)">
+            <summary>
+            get order
+            </summary>
+            <param name="orderId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.AddProductToOrder(System.Int32,System.Int32)">
+            <summary>
+            add product to order
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.GetAllOrderCartCustomer(System.Int32)">
+            <summary>
+            get all product of customer
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.UpdateQuantity(Application.ViewModels.UpdateQuantityRequest)">
+            <summary>
+            update quantity product cart
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.RemoveProduct(System.Int32,System.Int32)">
+            <summary>
+            remove quantity product cart
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.OrderController.GetAllOrders">
+            <summary>
+            get all order of customer for admin
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.PaymentController.payOSTransferHandler(Net.payOS.Types.WebhookType)">
+            <summary>
+            update order after pyament by self
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.GetAllProductsAsync(System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+             get all product for customer,admin
+            </summary>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.GetProductByIdAsync(System.Int32)">
+            <summary>
+            get all product for custome, admin
+            </summary>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.GetAllProductType(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            get all product type for customer, admin
+            </summary>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.CreateProductAsync(Application.ViewModels.CreateProductDTO)">
+            <summary>
+            create product for admin
+            </summary>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.UpdateProductAsync(System.Int32,Application.ViewModels.CreateProductDTO)">
+            <summary>
+            update product for admin
+            </summary>      
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductController.DeleteProductAsync(System.Int32)">
+            <summary>
+            delete product for admin
+            </summary>    
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductImagesController.UploadProductImages(System.Int32,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+            <summary>
+            upload image product when create for admin
+            </summary>
+        </member>
+        <member name="M:E_commerce_cyberDucky.Controllers.ProductImagesController.UpdateProductImage(System.Int32,System.Int32,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            update images product for admin
+            </summary>
+            <param name="productId"></param>
+            <param name="imageId"></param>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
